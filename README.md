@@ -1,0 +1,2 @@
+# opencc6
+snowtrick
