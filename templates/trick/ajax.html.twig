@@ -1,0 +1,31 @@
+
+
+
+        {% for trick in tricks %}
+            <div class="col-4 col-6-medium col-12-small post">
+                <div class="col-4 col-6-medium col-12-small">
+                    <section class="box">
+                        <a href="{{ path('trickSlug', {'slug': trick.slug}) }}" class="image featured">
+                            {% if trick.thumbnail %}
+                                <img src="{{ asset("uploads/trick/" ~ trick.thumbnail.path) }}" width="100%">
+                            {% endif %}</a>
+                        <header>
+                            <h3>{{ trick.name }}</h3>
+                        </header>
+                        <p>{{ trick.description }}</p>
+                        <footer>
+                            <ul class="actions">
+                                <li><a href="{{ path('trickSlug', {'slug': trick.slug}) }}" class="button alt">Voir la
+                                        suite</a></li>
+                            </ul>
+                            <ul>
+                                {% for tag in trick.tag %}
+                                    <li>{{ tag.name }}</li>
+                                {% endfor %}
+
+                            </ul>
+                        </footer>
+                    </section>
+                </div>
+            </div>
+        {% endfor %}

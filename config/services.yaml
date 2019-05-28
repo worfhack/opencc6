@@ -1,0 +1,56 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    trick_upload: '%kernel.project_dir%/public/uploads/trick'
+    trick_banner: '%kernel.project_dir%/public/uploads/trick_banner'
+    trick_min:    '%kernel.project_dir%/public/uploads/trick_min'
+    trick_banner_width:  '1200'
+    trick_min_width:  '200'
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%trick_upload%'
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    App\Service\SnowPhpthumb:
+        arguments:
+            $targetDirectoryBase: '%trick_upload%'
+            $targetDirectoryBanner: '%trick_banner%'
+            $targetDirectoryMin: '%trick_min%'
+            $banner_width: '%trick_banner_width%'
+            $min_width: '%trick_min_width%'
+
+    App\EventListener\TrickListener:
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate , method: preUpdate, , connection: default}
+            - { name: doctrine.event_listener, event: prePersist , method: prePersist, , connection: default}
+#    App\EventListener\TrickListenerSubscriber:
+#        tags:
+#            - { name: doctrine.event_subscriber, connection: default }
+
+    App\Service\Configuration:
+        # call the static method
+        factory: ['App\Service\Configuration', getInstance]
+#        arguments: App\Repository\ConfigurationRepository]

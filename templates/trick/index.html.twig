@@ -1,0 +1,171 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+
+    <section class="nopadding col-lg-12 mx-auto text-center border border-dark">
+
+
+        <header class="masthead content" id="front_picture" style="
+                {% if trick.thumbnail %}background-image:        url('{{ asset("uploads/trick/" ~ trick.thumbnail.path) }}');{% endif %}">
+
+            {% if app.user %}
+                <div class="fai">
+                    <a href="{{ path('edittrick', {'id': trick.id}) }}"><i class="fa fa-pencil cursor"></i></a>
+                    <a href="{{ path('deletetrick', {'id': trick.id}) }}" data-toggle="modal"
+                       data-target="#confirm-delete"> <i class="fa fa-trash cursor"></i></a>
+                </div>
+            {% endif %}
+
+
+            <div class="intro-text">
+
+                <div class="intro-heading col-lg-4 mx-auto text-center">
+                    {{ trick.name }}
+                </div>
+
+            </div>
+        </header>
+
+        <div class="d-sm-none mx-auto">
+            <button type="button" class="btn btn-dark mt-3">See Medias</button>
+        </div>
+
+        <div class="d-none d-sm-block">
+
+
+            <div class="album py-5 bg">
+                <div class="container">
+                    <div class="row">
+
+                        {% for image in trick.trickImages %}
+
+                            <div class="col-md-2" id="">
+                                <div class="card mb-4 box-shadow">
+                                    <img class="card-img-top" src="{{ asset("uploads/trick_min/" ~ image.imageList.path) }}"
+                                         alt="none" >
+                                </div>
+                            </div>
+
+
+
+                        {% endfor %}
+
+
+
+                        {% for video in trick.trickVideos %}
+                            <div class="col-md-2" id="">
+
+
+                                    <div class="card mb-4 box-shadow">
+
+
+
+                                        <div class="embed-responsive embed-responsive-4by3">
+
+                                        <iframe class="embed-responsive-item" src="{{ video.videolist.url }}"
+                                                frameborder="0" allow="autoplay; encrypted-media"
+                                                allowfullscreen=""></iframe>
+                                        </div>
+                                    </div>
+
+
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+
+            <div class="col-lg-10 mx-auto mt-5 mb-5">
+                <p class="text-justify">
+                    {{ trick.description | raw }}
+
+
+                </p>
+            </div>
+
+
+            <hr class="col-lg-10">
+
+
+            <div class="row text-center">
+                {% if app.user %}
+                    <div class="col-sm-10 col-md-8 mx-auto">
+                        {{ form_start(formComments) }}
+                        {{ form_row(formComments.description) }}
+                        {{ form_row(formComments.description) }}
+                        <button type="submit" class="btn btn-success col-sm-s8 mx-auto">Laisser un commentaire</button>
+                        {{ form_end(formComments) }}
+                    </div>
+                {% else %}
+                    <div class="col-sm-10 col-md-8 mx-auto">
+                        <h3>Veuillez vous connecter pour laisser un commentaire</h3>
+                        <p class="p_center"><a class="italic" href="{{ path('login') }}">Connectez-vous</a>
+                            {#ou <a class="italic" href="{{path('register')}}">créez un compte</a>#}
+
+                    </div>
+                {% endif %}
+            </div>
+
+            <hr>
+
+            {% if trick.comments  | length == 0 %}
+                <h4 class="p_center">Aucun commentaire pour ce Trick. Soyez le premier à commenter.</h4>
+            {% elseif  trick.comments | length == 1 %}
+                <i class="far fa-comments"></i> {{ trick.comments  | length }} Commentaire
+            {% else %}
+                <i class="far fa-comments"></i> {{ trick.comments  | length }} Commentaires
+            {% endif %}
+
+            <section id="comments">
+
+                <aside>
+                    <div class="container" id="comments-data">
+
+                        {% for comment in trick.comments %}
+
+
+                            <div class="row listComments">
+                                <div class="col-lg-7 mx-auto mb-3 mt-2">
+                                    <div class="panel panel-white post panel-shadow">
+                                        <div class="post-heading">
+                                            <div class="pull-left image">
+                                            <img src="{{ asset("uploads/trick_min/" ~  comment.user.avatar) }}" class="img-circle avatar" alt="user profile image">
+
+                                            </div>
+                                            <div class="text-left meta">
+
+                                                <div class="title">
+                                                    <p><b>{{ comment.user.username }}</b> <i
+                                                                class="text-muted time">({{ comment.dateAdd | date('d/m/Y à H:i') }}
+                                                            )</i></p>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="post-description text-justify">
+                                            <p>{{ comment.description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+
+                    </div>
+
+                </aside>
+
+            </section>
+
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

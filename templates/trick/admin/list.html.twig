@@ -1,0 +1,66 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+
+
+    <div id="trickListAdmin" class=" row col">
+
+        {% for trick in tricks %}
+
+            <div data-value="{{ trick.id }}"class="list-group-item col-4 col-lg-3 portfolio-item">
+                {% if trick.thumbnail %}
+
+                    <img width="50px" src="{{ asset("uploads/trick/" ~ trick.thumbnail.path) }}" width="100%">
+
+                {% endif %}
+                        {{  trick.name }}
+            <a href="{{ path('edittrick', {'id': trick.id})  }}">Editer</a>
+            </div>
+
+        {% endfor %}
+
+
+
+    </div>
+
+    <a href="{{ path('addtrick') }}">Create new</a>
+
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('assets/js/Sortable.js') }}"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            new Sortable(trickListAdmin, {
+                animation: 150,
+                ghostClass: 'blue-background-class',
+
+                onSort: function (/**Event*/evt) {
+                    console.log(evt.item.dataset.value);  // element's new index within parent
+                    console.log(evt.newDraggableIndex);  // element's new index within parent
+                 var    url = '{{ path('setPosition', {"id": 'setid'})  }}';
+                 url = url.replace('setid', evt.item.dataset.value);
+                    $.ajax({
+                        url:url,
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            "position": evt.newDraggableIndex + 1
+                        },
+                        async: true,
+                        success: function (data)
+                        {
+                            console.log(data)
+                            $( '#titre' ).text(data.titre);
+                            $( '#producteur' ).text(data.producteur);
+                        }
+                    })
+                    // var order = sortable.toArray();
+                    //$('.visuaplayoutCol02').attr('value', $('.visuaplayoutCol01').attr('value') + ',' + evt.item.dataset.id);
+                },
+            });
+        });
+    </script>
+
+{% endblock %}
+

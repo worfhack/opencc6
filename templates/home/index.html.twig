@@ -1,0 +1,49 @@
+{% extends "layout.html.twig" %}
+{% block banner %}
+
+
+    <header class="masthead" style="{% if homeBG %} background-image:url('{{ asset("uploads/trick/" ~ homeBG) }}'){% endif %}">
+        <div class="container">
+            <div class="intro-text">
+                <div class="intro-lead-in">{{ sliderTitle }}</div>
+                <div class="intro-heading text-uppercase">{{ sliderSubTitle }}</div>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+{% block content %}
+
+
+
+
+
+
+    <div class="row" id="tricks-data">
+        {% for trick in tricks %}
+
+            <div class="col-lg-3 portfolio-item" >
+                <a class="portfolio-link" href="{{ path('trickSlug', {'slug': trick.slug}) }}">
+                    <div class="portfolio-hover">
+                        <div class="portfolio-hover-content">
+                            <i class="fa fa-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    {% if trick.thumbnail %}
+                        <img class="img-fluid" src="{{ asset("uploads/trick_min/" ~ trick.thumbnail.path) }}" width="100%">
+                    {% endif %}</a>
+                </a>
+                <div class="row mt-4 p-1">
+                    <h4 class="col-lg-6 under"><u><a href="{{ path('trickSlug', {'slug': trick.slug}) }}">{{ trick.name }}</a></u></h4>
+
+
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+
+
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+
+        <div class="row" id="imageadminlist">
+            {% for image in images %}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+d
+                    <a href="{{ path('deleteImage', {'id': image.id}) }}" onclick="return confirm(`Êtes-vous sûr de vouloir supprimer le trick : {{image.path}} ?`)"><i class="fas fa-trash"></i></a>
+xx
+                    <div class="card">
+                        <a href="{{ path('editimage', {'id': image.id}) }}">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">
+                                    {{ image.path }}
+                                </h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    <a href="{{ path('newimage') }}">Create new</a>
+
+{% endblock %}

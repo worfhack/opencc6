@@ -1,0 +1,28 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+    <div class="row">
+        {% for tag in tags %}
+            <div class="col-4 col-6-medium col-12-small">
+                {##}
+
+
+                <div class="col-4 col-6-medium col-12-small">
+                    <section class="box">
+                        <a href="{{ path('edittag', {'id': tag.id}) }}" class="image featured">
+
+                        <header>
+                            <h3>{{ tag.name }}</h3>
+                        </header>
+                        </a>
+
+                    </section>
+                </div>
+
+
+
+            </div>
+
+        {% endfor %}
+    </div>
+
+{% endblock %}

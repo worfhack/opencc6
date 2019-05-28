@@ -1,0 +1,12 @@
+<div id="image-{{ form.vars.prototype.vars.name }}">
+    {#{{ form_row(image.imageList ) }}#}
+    {{ form.vars.prototype.vars.name }}
+    {% for image in form %}
+        {{ form_errors(image) }}
+        {{ form_row(image.imageList ) }}
+        {{ form_row(image.thumbnail ) }}
+        {{ form_row(image.position ) }}
+
+    {% endfor %}
+    <button type="button" class="btn btn-danger btn-remove" data-rel="#image-{{ form.vars.name }}">Supprimer</button>
+</div>

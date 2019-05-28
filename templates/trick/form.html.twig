@@ -1,0 +1,189 @@
+{# templates/default/new.html.twig #}
+{% macro printImageForm(imageform) %}
+    <div class="col-12 js-collection-item">
+            <span class="fa fa-close"></span>
+
+            {% for choice in imageform.imageList.vars.choices %}
+                 <label><img  height="100px" src="{{ asset("uploads/trick/" ~ choice.data.path) }}"/>
+                <input type="radio" name="{{ imageform.imageList.vars.full_name}}"   value="{{ choice.value }}">
+                 </label>
+            {% endfor %}
+
+            {{ form_errors(imageform) }}
+        {{ form_row(imageform.thumbnail) }}
+    </div>
+{% endmacro %}
+{% macro printVideoForm(videoForm) %}
+    <div class="col-12 js-collection-item">
+        <span class="fa fa-close"></span>
+
+        {% for choice in videoForm.videoList.vars.choices %}
+            <label>{{ choice.data.url }}
+                <input type="radio" name="{{ videoForm.videoList.vars.full_name}}"   value="{{ choice.value }}">
+            </label>
+        {% endfor %}
+
+        {{ form_errors(videoForm) }}
+    </div>
+{% endmacro %}
+
+{% import _self as formMacros %}
+
+{% extends "layout.html.twig" %}
+{% block content %}
+
+
+    <div class="col-lg-7 col-md-10 mx-auto">
+
+        {% if trick.id %}
+            <h1>Modifier le trick : {{ trick.name }}</h1>
+        {% else %}
+            <h1>Nouveaui trick</h1>
+        {% endif %}
+        {{ form_start(form) }}
+        {{ form_row(form._token) }}
+
+        {{ form_row(form.description) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.tag) }}
+
+
+        <div id="imageform">
+
+        <h3>Image</h3>
+
+
+        <div class="row" id="imageBlock" data-prototype="{{ formMacros.printImageForm(form.trickImages.vars.prototype)|e('html_attr') }}">
+
+            {% for image in form.trickImages %}
+                <div class="js-collection-item col-12">
+
+                        <a href="" class="js-remove-collection-item pull-right">
+                            <span class="fa fa-close"></span>
+                        </a>
+
+
+                        <img  width="90" src="{{ asset("uploads/trick/" ~ image.imageList.vars.data.path) }}" />
+                        <div style="display: none" >{{ form_row(image.imageList ) }}</div>
+
+                        {{ form_row(image.thumbnail ) }}
+                        {{ form_errors(image) }}
+
+
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div id="videoform">
+
+        <h3>Video</h3>
+        <div class="row" id="videoBlock"  data-prototype="{{ formMacros.printVideoForm(form.trickVideos.vars.prototype)|e('html_attr') }}">
+
+            {% for video in form.trickVideos %}
+            <div class="js-collection-item col-12">
+
+                    <a href="" class="js-remove-collection-item pull-right">
+                        <span class="fa fa-close"></span>
+                    </a>
+                        {{ form_errors(video) }}
+                    {{ video.videoList.vars.data.url}}
+                    <div style="display: none" >{{ form_row(video.videoList ) }}</div>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+        {{ form_row(form.Submit) }}
+        {{ form_errors(form) }}
+        {{ form_end(form, {'render_rest': false}) }}
+
+    </div>
+    <script>
+
+        var $collectionHolderImg;
+        var $collectionHolderVideo;
+        jQuery(document).ready(function() {
+            var $wrapper = $('#imageBlock');
+            $wrapper.on('click', '.js-remove-collection-item', function(e) {
+                e.preventDefault();
+                $(this).closest('.js-collection-item')
+                    .fadeOut()
+                    .remove();
+            });
+        });
+        // setup an "add a tag" link
+        var $addTagButtonImg = jQuery('<button type="button" class="add_tag_link">Add a image</button>');
+        var $newLinkLiImg = jQuery('<p></p>').append($addTagButtonImg);
+        var $addTagButtonVideo = jQuery('<button type="button" class="add_tag_link">Add a video</button>');
+        var $newLinkLiVideo = jQuery('<p></p>').append($addTagButtonVideo);
+
+
+        jQuery(document).ready(function () {
+            $collectionHolderImg = jQuery('#imageBlock');
+            $collectionHolderImg.append($newLinkLiImg);
+            $collectionHolderImg.data('index', $collectionHolderImg.find(':input').length);
+            $addTagButtonImg.on('click', function (e) {
+                addItemForm($collectionHolderImg, $newLinkLiImg);
+            });
+            $collectionHolderVideo = jQuery('#videoBlock');
+            $collectionHolderVideo.append($newLinkLiVideo);
+            $collectionHolderVideo.data('index', $collectionHolderVideo.find(':input').length);
+            $addTagButtonVideo.on('click', function (e) {
+                // add a new tag form (see next code block)
+                addItemForm($collectionHolderVideo, $newLinkLiVideo);
+            });
+        });
+
+        function addItemForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+            // get the new index
+            var index = $collectionHolder.data('index');
+            var newForm = prototype;
+            newForm = newForm.replace(/__name__/g, index);
+            $collectionHolder.data('index', index + 1);
+            // Display the form in the page in an li, before the "Add a tag" link li
+            var $newFormLi = $('<span></span>').append(newForm);
+            $newLinkLi.before($newFormLi);
+        }
+
+
+
+
+
+    </script>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/Sortable.js') }}"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            new Sortable(imageBlock, {
+                animation: 150,
+                ghostClass: 'blue-background-class',
+
+                onSort: function (/**Event*/evt) {
+
+
+                },
+            });
+            new Sortable(videoBlock, {
+                animation: 150,
+                ghostClass: 'blue-background-class',
+
+                onSort: function (/**Event*/evt) {
+
+
+                },
+            });
+        });
+    </script>
+
+{% endblock %}
+
+

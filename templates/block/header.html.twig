@@ -1,0 +1,61 @@
+
+<!-- Nav -->
+<nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
+    <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="{{ path('hommepage') }}">Home</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                    data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                Menu
+                <i class="fa fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+
+                <ul class="navbar-nav text-uppercase ml-auto">
+
+                    {% if  app.user %}
+
+
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ path('app_admin_admintrick_list') }}">Trick</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger"href="{{ path('app_admin_admintag_list') }}">Categories</a></li>
+
+
+
+
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ path('listimage') }}">Image</a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{{ path('app_admin_adminvideo_list') }}">Video</a></li>
+
+
+
+                        {% if is_granted('ROLE_ADMIN') %}
+
+
+                            <li class="nav-item"><a  class="nav-link js-scroll-trigger" href="{{ path('user_index') }}">Utilisateur</a></li>
+                        {% endif %}
+
+
+                    {% endif %}
+
+                    {% if not app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" class="nav-link js-scroll-trigger" href="{{ path('app_register') }}">Inscription</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" class="nav-link js-scroll-trigger" href="{{ path('login') }}">Connexion</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a  class="nav-link js-scroll-trigger"  class="nav-link" href="{{ path('logout') }}">Déconnexion</a>
+                        </li>
+
+                    {% endif %}
+                </ul>
+        </div>
+        </div>
+</nav>
+
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+{% endfor %}

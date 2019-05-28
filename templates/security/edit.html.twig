@@ -1,0 +1,20 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+    <h3>Formulaire d'ajout de Tag</h3>
+
+    <div class="well">
+        {{ form_start(form) }}
+        {{ form_row(form._token) }}
+        {{ form_row(form.firstname) }}
+        {{ form_row(form.lastname) }}
+        {{ form_row(form.description) }}
+
+        <img class="show-article-img" src=" {{ asset("uploads/trick_min/" ~ user.avatar)  }}">
+
+        {{ form_widget(form.avatar) }}
+        {{ form_row(form.save) }}
+        {{ form_end(form, {'render_rest': false}) }}
+
+    </div>
+
+{% endblock %}
